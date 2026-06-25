@@ -17,14 +17,23 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function login(email, password) {
-    const res = await api.post("/auth/login", { email, password });
-    setAdmin(res.data.admin);
-    return res.data;
+    try {
+      const res = await api.post("/auth/login", { email, password });
+      setAdmin(res.data.admin);
+      return res.data;
+    } catch (err) {
+      console.error("Login failed:", err);
+      throw err;
+    }
   }
 
   async function logout() {
-    await api.post("/auth/logout").catch(() => {});
-    setAdmin(null);
+    try {
+      await api.post("/auth/logout").catch(() => {});
+      setAdmin(null);
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
   }
 
   return (
